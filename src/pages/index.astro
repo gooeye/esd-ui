@@ -1,0 +1,53 @@
+---
+
+import ModeToggle from '@/layouts/modeToggle.vue';
+import Cart from '@/layouts/cart.vue';
+import Restaurants from '@/layouts/restaurants.vue';
+import Menu from '@/layouts/menu.vue';
+import { Separator } from '@/components/ui/separator';
+
+import '../styles/globals.css';
+---
+
+<html lang="en">
+	<head>
+		<title>Runner Client</title>
+	</head>
+	<body class="flex flex-col h-screen">
+		<div class="flex justify-between items-center w-screen p-3">
+			<h1 class="text-xl font-bold">Insert App Name</h1> 
+			<ModeToggle client:load />
+		</div>
+		<Separator />
+		<div class="flex w-screen grow max-h-full overflow-y-auto">
+			<Restaurants class="w-4/12" client:load/>
+			<!-- <Separator orientation="vertical" /> -->
+			<Menu client:load/>
+			<!-- <Separator orientation="vertical" /> -->
+			<Cart class="w-4/12" client:load/>
+		</div>
+		<Separator />
+		<div class="flex justify-between w-screen p-3">
+			<div>hi</div>
+		</div>
+	</body>
+	<script is:inline>
+		const getThemePreference = () => {
+			if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+				return localStorage.getItem('theme');
+			}
+			return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+		};
+		const isDark = getThemePreference() === 'dark';
+		document.documentElement.classList[isDark ? 'add' : 'remove']('dark');
+	
+		if (typeof localStorage !== 'undefined') {
+			const observer = new MutationObserver(() => {
+				const isDark = document.documentElement.classList.contains('dark');
+				localStorage.setItem('theme', isDark ? 'dark' : 'light');
+			});
+			observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+		}
+	</script>
+	
+</html>
